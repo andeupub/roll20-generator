@@ -4,48 +4,71 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Roll20 코드 생성기</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231a1a1a'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' fill='white' font-family='monospace' font-weight='bold' font-size='11'>R20</text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Malgun Gothic','Segoe UI',sans-serif;font-size:13px;background:#eeece8;color:#1a1a1a;min-height:100vh;}
+:root{
+  --bg:#eeece8;--surface:#fff;--surface2:#f9f7f4;--surface3:#f5f3ef;
+  --border:#dedad4;--border2:#e5e2dc;--border3:#eee;
+  --text:#1a1a1a;--text2:#555;--text3:#888;--text4:#aaa;
+  --accent:#1a1a1a;--accent-text:#fff;
+  --chat-bg:#e4e2dc;--chat-border:#d0cdc8;
+  --out-bg:#eeece8;
+  --grp-bg:#f9f7f4;--grp-hover:#f2efe9;
+  --para-hover:#faf8f5;--para-on:#eeecea;
+  --input-bg:#fff;--input-border:#d5d2cc;
+}
+body.dark{
+  --bg:#18181a;--surface:#222226;--surface2:#1e1e22;--surface3:#2a2a2e;
+  --border:#38383f;--border2:#30303a;--border3:#2e2e36;
+  --text:#e8e6e0;--text2:#aaa8a2;--text3:#777;--text4:#555;
+  --accent:#e8e6e0;--accent-text:#18181a;
+  --chat-bg:#1c1c20;--chat-border:#2e2e38;
+  --out-bg:#18181a;
+  --grp-bg:#1e1e22;--grp-hover:#26262c;
+  --para-hover:#26262c;--para-on:#2e2e38;
+  --input-bg:#2a2a30;--input-border:#3a3a42;
+}
+body{font-family:'Malgun Gothic','Segoe UI',sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh;}
 .wrap{max-width:1060px;margin:0 auto;padding:18px 14px;}
 
 /* 헤더 */
 .app-header{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;}
 .app-title{font-size:17px;font-weight:700;}
-.app-sub{font-size:11px;color:#888;}
+.app-sub{font-size:11px;color:var(--text3);}
 .save-indicator{font-size:10px;color:#3b6d11;margin-left:auto;opacity:0;transition:opacity .4s;}
 .save-indicator.show{opacity:1;}
 
 /* 메인 탭 */
-.mtab-bar{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid #d8d5d0;padding-bottom:0;}
-.mtab{padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid transparent;background:transparent;color:#777;cursor:pointer;font-size:12px;font-family:inherit;margin-bottom:-1px;}
-.mtab:hover{background:#fff;color:#333;}
-.mtab.on{background:#fff;border-color:#d8d5d0;border-bottom-color:#fff;color:#1a1a1a;font-weight:600;}
+.mtab-bar{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:0;}
+.mtab{padding:7px 18px;border-radius:8px 8px 0 0;border:1px solid transparent;background:transparent;color:var(--text3);cursor:pointer;font-size:12px;font-family:inherit;margin-bottom:-1px;}
+.mtab:hover{background:var(--surface);color:var(--text);}
+.mtab.on{background:var(--surface);border-color:var(--border);border-bottom-color:var(--surface);color:var(--text);font-weight:600;}
 
 .hidden{display:none!important;}
-.panel{background:#fff;border:1px solid #dedad4;border-radius:10px;padding:14px 16px;margin-bottom:10px;}
-.ptitle{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
-.hr{border:none;border-top:1px solid #eee;margin:10px 0;}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.ptitle{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.hr{border:none;border-top:1px solid var(--border3);margin:10px 0;}
 
 /* 공통 폼 */
 .row{display:flex;align-items:center;gap:8px;margin-bottom:9px;flex-wrap:wrap;}
 .row label{font-size:12px;color:#666;min-width:66px;}
-input[type=text]{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;padding:0 8px;background:#fff;color:#1a1a1a;font-family:inherit;}
-input[type=text]:focus{outline:none;border-color:#888;}
-input[type=color]{width:28px;height:24px;padding:1px 2px;cursor:pointer;border:1px solid #d5d2cc;border-radius:4px;}
+input[type=text]{height:28px;font-size:12px;border:1px solid var(--input-border);border-radius:5px;padding:0 8px;background:var(--input-bg);color:var(--text);font-family:inherit;}
+input[type=text]:focus{outline:none;border-color:var(--text3);}
+input[type=color]{width:28px;height:24px;padding:1px 2px;cursor:pointer;border:1px solid var(--input-border);border-radius:4px;}
 input[type=range]{flex:1;cursor:pointer;}
 select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;padding:0 6px;background:#fff;color:#1a1a1a;font-family:inherit;cursor:pointer;}
 .hex-row{display:flex;gap:5px;align-items:center;}
 .hex-row input[type=text]{height:24px;max-width:78px;font-size:11px;font-family:monospace;flex:none;}
 .chip-row{display:flex;gap:4px;flex-wrap:wrap;}
-.chip{padding:3px 10px;border-radius:99px;border:1px solid #d5d2cc;background:#fff;color:#666;cursor:pointer;font-size:11px;font-family:inherit;}
-.chip.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
+.chip{padding:3px 10px;border-radius:99px;border:1px solid var(--input-border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;}
+.chip.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
 .vout{font-size:11px;color:#888;min-width:26px;text-align:right;}
 
 /* 버튼 */
-.btn{padding:5px 13px;border-radius:5px;border:1px solid #d5d2cc;background:#fff;color:#1a1a1a;cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;}
-.btn:hover{background:#f5f3ef;}
-.btn.pri{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
+.btn{padding:5px 13px;border-radius:5px;border:1px solid var(--input-border);background:var(--surface);color:var(--text);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;}
+.btn:hover{background:var(--surface3);}
+.btn.pri{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
 .btn.pri:hover{opacity:.85;}
 .btn.green{border-color:#4a8a2a;color:#3b6d11;}
 .btn.green:hover{background:#f0f7eb;}
@@ -54,15 +77,15 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 .btn-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
 
 /* 출력 */
-.out-box{background:#eeece8;border:1px solid #dedad4;border-radius:7px;padding:10px 12px;}
-.out-code{font-family:'Courier New',monospace;font-size:11px;color:#1a1a1a;line-height:1.85;word-break:break-all;white-space:pre-wrap;min-height:32px;}
+.out-box{background:var(--out-bg);border:1px solid var(--border);border-radius:7px;padding:10px 12px;}
+.out-code{font-family:'Courier New',monospace;font-size:11px;color:var(--text);line-height:1.85;word-break:break-all;white-space:pre-wrap;min-height:32px;}
 .note{font-size:11px;color:#999;margin-top:5px;line-height:1.5;}
 
 /* 미리보기 */
-.prev-box{background:#f5f3ef;border:1px solid #dedad4;border-radius:7px;padding:12px 14px;margin-top:8px;min-height:40px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.prev-box{background:var(--surface3);border:1px solid var(--border);border-radius:7px;padding:12px 14px;margin-top:8px;min-height:40px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 
 /* ========== 이름 바 ========== */
-.name-bar{background:#fff;border:1px solid #dedad4;border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.name-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
 .name-bar-lbl{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;}
 .name-field{display:flex;align-items:center;gap:5px;}
 .name-field b{font-size:12px;color:#444;font-weight:700;}
@@ -71,21 +94,21 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 
 /* ========== 시나리오 레이아웃 ========== */
 .sc-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:10px;align-items:start;}
-.sc-left{background:#fff;border:1px solid #dedad4;border-radius:10px;overflow:hidden;}
-.sc-left-head{padding:9px 11px;border-bottom:1px solid #eee;background:#f9f7f4;display:flex;align-items:center;justify-content:space-between;}
-.sc-left-head-lbl{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;}
-.icon-btn{width:20px;height:20px;border-radius:3px;border:1px solid #d5d2cc;background:#fff;color:#555;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1;}
-.icon-btn:hover{background:#f5f3ef;}
+.sc-left{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.sc-left-head{padding:9px 11px;border-bottom:1px solid var(--border3);background:var(--grp-bg);display:flex;align-items:center;justify-content:space-between;}
+.sc-left-head-lbl{font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;letter-spacing:.06em;}
+.icon-btn{width:20px;height:20px;border-radius:3px;border:1px solid var(--input-border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:inherit;line-height:1;}
+.icon-btn:hover{background:var(--surface3);}
 .sc-tree{max-height:560px;overflow-y:auto;}
 .sc-empty-msg{padding:18px;text-align:center;font-size:12px;color:#aaa;}
 
 /* 그룹 */
-.grp-wrap{border-bottom:1px solid #f0ede8;}
+.grp-wrap{border-bottom:1px solid var(--border2);}
 .grp-wrap:last-child{border-bottom:none;}
-.grp-head{display:flex;align-items:center;padding:7px 9px;cursor:pointer;gap:4px;background:#f9f7f4;}
-.grp-head:hover{background:#f2efe9;}
-.grp-toggle{font-size:9px;color:#999;width:10px;flex-shrink:0;}
-.grp-name-el{flex:1;font-size:12px;font-weight:600;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;outline:none;}
+.grp-head{display:flex;align-items:center;padding:7px 9px;cursor:pointer;gap:4px;background:var(--grp-bg);}
+.grp-head:hover{background:var(--grp-hover);}
+.grp-toggle{font-size:9px;color:var(--text3);width:10px;flex-shrink:0;}
+.grp-name-el{flex:1;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;outline:none;}
 .grp-name-el:focus{background:#fff;border-radius:3px;padding:0 3px;}
 .grp-xbtn{opacity:0;font-size:10px;color:#bbb;cursor:pointer;border:none;background:transparent;padding:0 2px;font-family:inherit;}
 .grp-head:hover .grp-xbtn{opacity:1;}
@@ -93,11 +116,13 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 
 /* 단락 */
 .para-wrap{}
-.para-item{display:flex;align-items:center;padding:5px 9px 5px 22px;cursor:pointer;border-bottom:1px solid #f5f2ee;gap:4px;}
-.para-item:hover{background:#faf8f5;}
-.para-item.on{background:#eeecea;}
-.para-name-el{flex:1;font-size:12px;color:#444;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.para-item.on .para-name-el{font-weight:600;color:#1a1a1a;}
+.para-item{display:flex;align-items:center;padding:5px 9px 5px 22px;cursor:pointer;border-bottom:1px solid var(--border2);gap:4px;}
+.para-item:hover{background:var(--para-hover);}
+.para-item.on{background:var(--para-on);}
+.para-item.pdrag-over{border-top:2px solid #1a1a1a;}
+.para-item.pdragging{opacity:.4;}
+.para-name-el{flex:1;font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.para-item.on .para-name-el{font-weight:600;color:var(--text);}
 .para-xbtn{opacity:0;font-size:10px;color:#bbb;cursor:pointer;border:none;background:transparent;padding:0 2px;font-family:inherit;}
 .para-item:hover .para-xbtn{opacity:1;}
 .para-xbtn:hover{color:#e24b4a;}
@@ -107,23 +132,23 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 
 /* 행 편집 */
 .row-editor{display:flex;flex-direction:column;gap:10px;}
-.re-top{background:#fff;border:1px solid #dedad4;border-radius:10px;}
-.re-header{padding:9px 13px;border-bottom:1px solid #eee;background:#f9f7f4;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.re-top{background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+.re-header{padding:9px 13px;border-bottom:1px solid var(--border3);background:var(--grp-bg);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
 
 /* 접기/펼치기 공통 */
 .sec-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
 .sec-header:hover .sec-toggle{color:#333;}
-.sec-toggle{font-size:11px;color:#aaa;padding:2px 6px;border-radius:4px;border:1px solid #e5e2dc;background:#fff;cursor:pointer;font-family:inherit;transition:transform .18s;}
+.sec-toggle{font-size:11px;color:var(--text4);padding:2px 6px;border-radius:4px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-family:inherit;transition:transform .18s;}
 .sec-toggle.closed{transform:rotate(-90deg);}
 .sec-body{overflow:hidden;transition:max-height .22s ease, opacity .18s;}
 .sec-body.closed{max-height:0!important;opacity:0;pointer-events:none;}
-.breadcrumb{font-size:11px;color:#999;}
+.breadcrumb{font-size:11px;color:var(--text3);}
 .breadcrumb b{color:#1a1a1a;font-weight:700;}
 .re-header-btns{display:flex;gap:4px;flex-wrap:wrap;}
 .row-list{padding:7px;}
 
 /* 행 아이템 */
-.ri{display:flex;align-items:stretch;border:1px solid #e5e2dc;border-radius:5px;margin-bottom:4px;overflow:hidden;background:#fff;transition:box-shadow .1s;}
+.ri{display:flex;align-items:stretch;border:1px solid var(--border2);border-radius:5px;margin-bottom:4px;overflow:hidden;background:var(--surface);transition:box-shadow .1s;}
 .ri:last-child{margin-bottom:0;}
 .ri.drag-over{box-shadow:0 -2px 0 0 #1a1a1a;}
 .ri.dragging{opacity:.45;}
@@ -133,43 +158,55 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 .ri-badge.div{background:#ffe5e5;color:#a33;}
 .ri-badge.memo{background:#fffbe6;color:#856a00;}
 .ri-body{flex:1;padding:6px 9px;min-height:34px;display:flex;align-items:flex-start;}
-.ri-ta{width:100%;border:none;outline:none;resize:none;font-size:12px;font-family:inherit;color:#1a1a1a;background:transparent;line-height:1.55;min-height:26px;padding:0;}
+.ri-ta{width:100%;border:none;outline:none;resize:none;font-size:12px;font-family:inherit;color:var(--text);background:transparent;line-height:1.55;min-height:26px;padding:0;}
 .ri-ta.memo{font-size:11px;color:#999;font-style:italic;}
 .ri-ta.div{font-size:11px;color:#a33;}
-.ri-drag{width:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px;cursor:grab;border-left:1px solid #f0ede8;background:#faf8f5;user-select:none;}
+.ri-drag{width:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text4);font-size:12px;cursor:grab;border-left:1px solid var(--border2);background:var(--surface2);user-select:none;}
 .ri-drag:hover{color:#888;}
-.ri-ctx{width:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:15px;cursor:pointer;border-left:1px solid #f0ede8;background:#faf8f5;border:none;font-family:inherit;}
+.ri-ctx{width:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--text4);font-size:15px;cursor:pointer;border-left:1px solid var(--border2);background:var(--surface2);border:none;font-family:inherit;}
 .ri-ctx:hover{color:#555;background:#f0eeea;}
 .ri:hover .ri-ctx{color:#888;}
+/* 행 명령어 오버라이드 버튼 */
+.ri-cmd{flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;border-left:1px solid var(--border2);background:var(--surface2);border:none;font-family:monospace;padding:0 5px;color:var(--text4);white-space:nowrap;min-width:36px;}
+.ri-cmd:hover{background:var(--surface3);color:var(--text);}
+.ri-cmd.override{background:#e8f0fe;color:#1a4fa0;}
+body.dark .ri-cmd.override{background:#1a2a4a;color:#7ab0f8;}
+/* 명령어 팝업 */
+.cmd-popup{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:3px 0;z-index:9999;box-shadow:0 4px 14px rgba(0,0,0,.14);min-width:110px;}
+.cmd-popup-item{display:block;width:100%;padding:6px 14px;font-size:12px;font-family:monospace;color:var(--text);background:transparent;border:none;text-align:left;cursor:pointer;white-space:nowrap;}
+.cmd-popup-item:hover{background:var(--surface3);}
+.cmd-popup-item.on{background:var(--para-on);font-weight:700;}
+.cmd-popup-reset{display:block;width:100%;padding:6px 14px;font-size:11px;font-family:inherit;color:var(--text3);background:transparent;border:none;border-top:1px solid var(--border3);text-align:left;cursor:pointer;margin-top:2px;}
+.cmd-popup-reset:hover{background:var(--surface3);color:var(--text);}
 
 /* 컨텍스트 메뉴 */
-.ctx{position:fixed;background:#fff;border:1px solid #ddd;border-radius:7px;padding:3px 0;min-width:155px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.12);}
-.ctx-btn{padding:7px 15px;font-size:12px;cursor:pointer;color:#1a1a1a;font-family:inherit;display:block;width:100%;text-align:left;border:none;background:transparent;}
-.ctx-btn:hover{background:#f5f3ef;}
+.ctx{position:fixed;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:3px 0;min-width:155px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.ctx-btn{padding:7px 15px;font-size:12px;cursor:pointer;color:var(--text);font-family:inherit;display:block;width:100%;text-align:left;border:none;background:transparent;}
+.ctx-btn:hover{background:var(--surface3);}
 .ctx-btn.red{color:#e24b4a;}
 .ctx-btn.red:hover{background:#fff5f5;}
 .ctx-sep{border:none;border-top:1px solid #eee;margin:2px 0;}
 
 /* 결과 패널 */
-.result-panel{background:#fff;border:1px solid #dedad4;border-radius:10px;padding:13px 15px;}
+.result-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;}
 .cmd-bar{display:flex;align-items:center;gap:6px;margin-bottom:9px;flex-wrap:wrap;}
 .cmd-bar label{font-size:12px;color:#666;}
-.cmd-chip{padding:3px 10px;border-radius:99px;border:1px solid #d5d2cc;background:#fff;color:#666;cursor:pointer;font-size:11px;font-family:inherit;}
-.cmd-chip.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a;}
+.cmd-chip{padding:3px 10px;border-radius:99px;border:1px solid var(--input-border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;}
+.cmd-chip.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent);}
 .custom-cmd{height:24px;font-size:11px;font-family:monospace;border:1px solid #d5d2cc;border-radius:4px;padding:0 6px;width:90px;}
 
 /* 줄단위 복사 */
 .line-copy-list{display:flex;flex-direction:column;gap:3px;margin-top:6px;}
-.line-copy-row{display:flex;align-items:stretch;gap:0;border:1px solid #e5e2dc;border-radius:5px;overflow:hidden;}
-.line-copy-code{flex:1;font-family:'Courier New',monospace;font-size:11px;color:#555;padding:5px 9px;background:#faf8f5;white-space:pre-wrap;word-break:break-all;line-height:1.5;}
+.line-copy-row{display:flex;align-items:stretch;gap:0;border:1px solid var(--border2);border-radius:5px;overflow:hidden;}
+.line-copy-code{flex:1;font-family:'Courier New',monospace;font-size:11px;color:var(--text2);padding:5px 9px;background:var(--surface2);white-space:pre-wrap;word-break:break-all;line-height:1.5;}
 .line-copy-btn{padding:0 10px;background:#fff;border:none;border-left:1px solid #e5e2dc;color:#888;cursor:pointer;font-size:10px;white-space:nowrap;font-family:inherit;}
 .line-copy-btn:hover{background:#f0eeea;color:#333;}
 .line-copy-btn.copied{color:#3b6d11;}
 
 /* 채팅 미리보기 */
-.chat-prev{background:#e4e2dc;border:1px solid #d0cdc8;border-radius:10px;padding:12px 14px;}
+.chat-prev{background:var(--chat-bg);border:1px solid var(--chat-border);border-radius:10px;padding:12px 14px;}
 .chat-prev-lbl{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
-.chat-vp{background:#e4e2dc;border-radius:7px;padding:6px 2px;display:flex;flex-direction:column;gap:1px;min-height:50px;}
+.chat-vp{background:var(--chat-bg);border-radius:7px;padding:6px 2px;display:flex;flex-direction:column;gap:1px;min-height:50px;}
 .cl{padding:2px 8px;font-size:13px;line-height:1.55;}
 .cl.desc{text-align:center;font-weight:700;color:#222;padding:3px 14px;}
 .cl.em{text-align:center;font-weight:700;font-style:italic;color:#7a5500;padding:3px 14px;}
@@ -184,25 +221,25 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 /* ========== 매크로 탭 ========== */
 .macro-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
 .macro-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;}
-.mc-card{background:#fff;border:1px solid #dedad4;border-radius:9px;overflow:hidden;}
-.mc-card-head{display:flex;align-items:center;padding:8px 11px;border-bottom:1px solid #eee;background:#f9f7f4;gap:6px;}
-.mc-card-name{flex:1;font-size:12px;font-weight:600;color:#1a1a1a;border:none;background:transparent;outline:none;font-family:inherit;}
+.mc-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden;}
+.mc-card-head{display:flex;align-items:center;padding:8px 11px;border-bottom:1px solid var(--border3);background:var(--grp-bg);gap:6px;}
+.mc-card-name{flex:1;font-size:12px;font-weight:600;color:var(--text);border:none;background:transparent;outline:none;font-family:inherit;}
 .mc-card-name:focus{background:#fff;border-radius:3px;padding:0 4px;}
 .mc-card-body{padding:9px 11px;}
-.mc-ta{width:100%;min-height:80px;font-size:11px;font-family:'Courier New',monospace;border:1px solid #e0ddd7;border-radius:5px;padding:7px 9px;background:#faf8f5;color:#1a1a1a;resize:vertical;line-height:1.6;}
-.mc-ta:focus{outline:none;border-color:#888;}
-.mc-card-foot{display:flex;gap:5px;padding:8px 11px;border-top:1px solid #eee;background:#faf8f5;flex-wrap:wrap;}
+.mc-ta{width:100%;min-height:80px;font-size:11px;font-family:'Courier New',monospace;border:1px solid var(--border2);border-radius:5px;padding:7px 9px;background:var(--surface2);color:var(--text);resize:vertical;line-height:1.6;}
+.mc-ta:focus{outline:none;border-color:var(--text3);}
+.mc-card-foot{display:flex;gap:5px;padding:8px 11px;border-top:1px solid var(--border3);background:var(--surface2);flex-wrap:wrap;}
 .mc-note{font-size:11px;color:#aaa;padding:4px 11px 8px;line-height:1.45;}
 .mc-empty{text-align:center;padding:32px;font-size:12px;color:#aaa;}
 
 /* ========== 기능 변환 탭 ========== */
 .cv-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:10px;align-items:start;}
-.cv-menu{background:#fff;border:1px solid #dedad4;border-radius:10px;overflow:hidden;}
-.cv-menu-head{padding:9px 11px;border-bottom:1px solid #eee;background:#f9f7f4;font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;}
-.cv-menu-item{display:flex;align-items:center;padding:8px 11px;cursor:pointer;border-bottom:1px solid #f5f2ee;font-size:12px;color:#555;gap:7px;}
+.cv-menu{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.cv-menu-head{padding:9px 11px;border-bottom:1px solid var(--border3);background:var(--grp-bg);font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;}
+.cv-menu-item{display:flex;align-items:center;padding:8px 11px;cursor:pointer;border-bottom:1px solid var(--border2);font-size:12px;color:var(--text2);gap:7px;}
 .cv-menu-item:last-child{border-bottom:none;}
-.cv-menu-item:hover{background:#faf8f5;}
-.cv-menu-item.on{background:#eeece8;color:#1a1a1a;font-weight:600;}
+.cv-menu-item:hover{background:var(--para-hover);}
+.cv-menu-item.on{background:var(--bg);color:var(--text);font-weight:600;}
 .cv-menu-icon{font-size:14px;width:18px;text-align:center;}
 .cv-right{display:flex;flex-direction:column;gap:10px;}
 
@@ -233,33 +270,33 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 .img-row{display:flex;flex-direction:column;gap:6px;}
 
 /* IO 드롭다운 */
-.io-dropdown{position:absolute;top:calc(100% + 4px);background:#fff;border:1px solid #dedad4;border-radius:8px;padding:4px 0;min-width:190px;z-index:9000;box-shadow:0 4px 16px rgba(0,0,0,.12);}
-.io-dd-item{display:block;width:100%;padding:8px 14px;font-size:12px;font-family:inherit;color:#1a1a1a;background:transparent;border:none;text-align:left;cursor:pointer;white-space:nowrap;}
-.io-dd-item:hover{background:#f5f3ef;}
+.io-dropdown{position:absolute;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px 0;min-width:190px;z-index:9000;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.io-dd-item{display:block;width:100%;padding:8px 14px;font-size:12px;font-family:inherit;color:var(--text);background:transparent;border:none;text-align:left;cursor:pointer;white-space:nowrap;}
+.io-dd-item:hover{background:var(--surface3);}
 .io-dd-sep{border:none;border-top:1px solid #eee;margin:3px 0;}
 
 /* 내보내기/가져오기 모달 */
 .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:10000;display:flex;align-items:center;justify-content:center;}
-.modal{background:#fff;border-radius:12px;padding:22px 24px;min-width:320px;max-width:480px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.18);}
+.modal{background:var(--surface);border-radius:12px;padding:22px 24px;min-width:320px;max-width:480px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.18);}
 .modal-title{font-size:15px;font-weight:700;margin-bottom:14px;}
-.modal-body{font-size:13px;color:#555;margin-bottom:16px;line-height:1.6;}
+.modal-body{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;}
 .modal-btns{display:flex;gap:8px;justify-content:flex-end;}
 
 /* 실행 취소 토스트 */
-.undo-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;border-radius:8px;padding:9px 18px;font-size:12px;display:flex;align-items:center;gap:10px;z-index:9998;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none;}
+.undo-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--accent-text);border-radius:8px;padding:9px 18px;font-size:12px;display:flex;align-items:center;gap:10px;z-index:9998;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .2s;pointer-events:none;}
 .undo-toast.show{opacity:1;pointer-events:auto;}
 .undo-btn{background:transparent;border:1px solid rgba(255,255,255,.4);border-radius:4px;color:#fff;cursor:pointer;font-size:11px;padding:3px 10px;font-family:inherit;}
 .undo-btn:hover{background:rgba(255,255,255,.15);}
 
 /* 즐겨찾기 */
-.fav-item{display:flex;align-items:center;gap:6px;border:1px solid #e5e2dc;border-radius:6px;padding:7px 10px;background:#fff;}
+.fav-item{display:flex;align-items:center;gap:6px;border:1px solid var(--border2);border-radius:6px;padding:7px 10px;background:var(--surface);}
 .fav-item-prev{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .fav-item-name{font-size:12px;font-weight:600;color:#333;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .fav-item-preview{font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .fav-item-btns{display:flex;gap:4px;flex-shrink:0;}
-.fav-load{padding:3px 10px;border:1px solid #d5d2cc;border-radius:4px;background:#fff;cursor:pointer;font-size:11px;font-family:inherit;}
+.fav-load{padding:3px 10px;border:1px solid var(--input-border);border-radius:4px;background:var(--surface);cursor:pointer;font-size:11px;font-family:inherit;}
 .fav-load:hover{background:#f0f7eb;border-color:#4a8a2a;color:#3b6d11;}
-.fav-del{padding:3px 8px;border:1px solid #e5e2dc;border-radius:4px;background:#fff;cursor:pointer;font-size:11px;color:#aaa;font-family:inherit;}
+.fav-del{padding:3px 8px;border:1px solid var(--border2);border-radius:4px;background:var(--surface);cursor:pointer;font-size:11px;color:#aaa;font-family:inherit;}
 .fav-del:hover{border-color:#e24b4a;color:#e24b4a;}
 </style>
 </head>
@@ -270,6 +307,9 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
   <span class="app-sub">결과 코드를 그대로 Roll20에 붙여넣으세요</span>
   <span class="save-indicator" id="save-ind">저장됨 ✓</span>
   <div style="display:flex;gap:5px;margin-left:auto;position:relative;">
+    <a href="https://trpg-calendar-book.web.app/" target="_blank" rel="noopener" class="btn" style="text-decoration:none;">캘린더 북 이동하기 →</a>
+    <button class="btn" id="btn-dark-mode" title="다크 모드 전환">🌙</button>
+    <button class="btn" id="btn-shortcuts" title="단축키 안내">⌨</button>
     <button class="btn" id="btn-export-menu">↓ 내보내기 ▾</button>
     <button class="btn" id="btn-import-menu">↑ 불러오기 ▾</button>
     <!-- 내보내기 드롭다운 -->
@@ -311,8 +351,12 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
       <div class="sc-left-head">
         <span class="sc-left-head-lbl">시나리오</span>
         <div style="display:flex;gap:3px;">
+          <button class="icon-btn" id="sc-bulk-rename" title="단락 이름 일괄 편집" style="font-size:11px;">✏</button>
           <button class="icon-btn" id="sc-add-grp" title="그룹 추가">+</button>
         </div>
+      </div>
+      <div style="padding:6px 8px;border-bottom:1px solid #eee;">
+        <input type="text" id="sc-search" placeholder="🔍 단락 검색..." style="width:100%;height:24px;font-size:11px;border:1px solid #d5d2cc;border-radius:4px;padding:0 7px;background:#faf8f5;">
       </div>
       <div class="sc-tree" id="sc-tree"><div class="sc-empty-msg">+ 버튼으로 그룹 추가</div></div>
     </div>
@@ -460,7 +504,63 @@ select{height:28px;font-size:12px;border:1px solid #d5d2cc;border-radius:5px;pad
 </div>
 </div>
 
+<footer style="text-align:center;padding:24px 0 18px;font-size:11px;color:var(--text4);">
+  © andepub · Roll20 코드 생성기 · All rights reserved.
+</footer>
+
 <div class="ctx hidden" id="ctx-menu"></div>
+
+<!-- 단축키 안내 모달 -->
+<div class="modal-backdrop hidden" id="shortcuts-modal">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-title">⌨ 단축키 안내</div>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:12px;margin-bottom:16px;">
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">Ctrl + Z</code><span style="color:var(--text2);">행 삭제 실행 취소</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">Enter</code><span style="color:var(--text2);">같은 타입 행 아래에 추가</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">Shift + Enter</code><span style="color:var(--text2);">행 내에서 줄바꿈</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">행 ⠿ 드래그</code><span style="color:var(--text2);">행 순서 변경</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">단락 드래그</code><span style="color:var(--text2);">단락 순서 변경 / 그룹 간 이동</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">단락 ⋮ 버튼</code><span style="color:var(--text2);">복제 / 그룹 이동 / 삭제</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">행 ⋮ 버튼</code><span style="color:var(--text2);">행 추가 / 복사 / 붙여넣기 / 타입 변경</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">🌙 버튼</code><span style="color:var(--text2);">다크 모드 전환</span>
+      <code style="background:var(--surface3);border:1px solid var(--border2);border-radius:4px;padding:2px 7px;font-size:11px;white-space:nowrap;">✏ 버튼</code><span style="color:var(--text2);">단락 이름 일괄 편집</span>
+    </div>
+    <div style="font-size:11px;color:var(--text4);margin-bottom:14px;">KPC / PC / 탐사자 키워드는 이름 설정에서 입력한 실제 이름으로 자동 치환됩니다. 태그 행은 치환 제외.</div>
+    <div class="modal-btns">
+      <button class="btn pri" id="shortcuts-close">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 행 타입 일괄 변경 모달 -->
+<div class="modal-backdrop hidden" id="bulk-type-modal">
+  <div class="modal" style="max-width:360px;">
+    <div class="modal-title">행 타입 일괄 변경</div>
+    <div class="modal-body">선택된 <b id="bulk-type-count">0</b>개 행의 타입을 변경합니다.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+      <button class="btn" data-type="tag" id="btype-tag" style="padding:10px;font-size:13px;">태그</button>
+      <button class="btn" data-type="common" id="btype-common" style="padding:10px;font-size:13px;">범용</button>
+      <button class="btn" data-type="div" id="btype-div" style="padding:10px;font-size:13px;">구분선</button>
+      <button class="btn" data-type="memo" id="btype-memo" style="padding:10px;font-size:13px;">메모</button>
+    </div>
+    <div class="modal-btns">
+      <button class="btn" id="bulk-type-cancel">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 단락 이름 일괄 편집 모달 -->
+<div class="modal-backdrop hidden" id="bulk-rename-modal">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-title">단락 이름 일괄 편집</div>
+    <div class="modal-body" style="margin-bottom:10px;">한 줄에 단락 이름 하나씩 입력하세요. 순서는 현재 트리와 동일합니다.</div>
+    <textarea id="bulk-rename-ta" style="width:100%;min-height:200px;font-size:12px;font-family:inherit;border:1px solid #d5d2cc;border-radius:6px;padding:9px 11px;resize:vertical;line-height:1.8;"></textarea>
+    <div class="modal-btns" style="margin-top:12px;">
+      <button class="btn" id="bulk-rename-cancel">취소</button>
+      <button class="btn pri" id="bulk-rename-ok">적용</button>
+    </div>
+  </div>
+</div>
 <div class="undo-toast" id="undo-toast">
   <span id="undo-msg">행이 삭제됐습니다.</span>
   <button class="undo-btn" id="undo-action">실행 취소</button>
@@ -1094,6 +1194,7 @@ function onNameChange(){renderResult();scheduleSave();}
 let DATA={groups:[]};
 let SEL={gid:null,pid:null};
 let CLIPBOARD=null;
+let PARA_DRAG=null; // 단락 드래그 상태
 let MACROS=[];
 
 // ─────────────────────────────────────────────
@@ -1198,9 +1299,16 @@ document.addEventListener('keydown',e=>{
 // ─────────────────────────────────────────────
 function renderTree(){
   const tree=$('sc-tree');
+  const q=($('sc-search')||{value:''}).value.trim().toLowerCase();
   if(!DATA.groups.length){tree.innerHTML='<div class="sc-empty-msg">+ 버튼으로 그룹 추가</div>';return;}
   tree.innerHTML='';
   DATA.groups.forEach(grp=>{
+    // 검색 필터: 그룹명 또는 단락명 매칭
+    const matchedParas=q
+      ? grp.paras.filter(p=>p.name.toLowerCase().includes(q)||grp.name.toLowerCase().includes(q))
+      : grp.paras;
+    if(q && matchedParas.length===0) return; // 검색 시 매칭 없는 그룹 숨김
+
     const open=grp.open!==false;
     const wrap=document.createElement('div');
     wrap.className='grp-wrap';
@@ -1216,41 +1324,163 @@ function renderTree(){
     head.querySelector('.grp-name-el').addEventListener('input',e=>{grp.name=e.target.textContent.trim()||'그룹';scheduleSave();});
     head.querySelector('.grp-xbtn').addEventListener('click',e=>{
       e.stopPropagation();
+      if(!confirm(`"${grp.name}" 그룹을 삭제할까요? 안의 단락도 모두 사라져요.`)) return;
       DATA.groups=DATA.groups.filter(g=>g.id!==grp.id);
       if(SEL.gid===grp.id){SEL.gid=null;SEL.pid=null;}
+      renderTree();renderEditor();scheduleSave();
+    });
+    // 그룹 헤더: 단락 드래그 오버 허용
+    head.addEventListener('dragover',e=>{e.preventDefault();});
+    head.addEventListener('drop',e=>{
+      e.preventDefault();
+      if(!PARA_DRAG) return;
+      const {para:dp,fromGid}=PARA_DRAG;
+      const srcGrp=DATA.groups.find(g=>g.id===fromGid);
+      if(!srcGrp||srcGrp.id===grp.id) return;
+      srcGrp.paras=srcGrp.paras.filter(p=>p.id!==dp.id);
+      grp.paras.unshift(dp);
+      SEL.gid=grp.id;SEL.pid=dp.id;
       renderTree();renderEditor();scheduleSave();
     });
     wrap.appendChild(head);
     if(open){
       const plist=document.createElement('div');plist.className='para-wrap';
-      grp.paras.forEach(para=>{
+      matchedParas.forEach(para=>{
         const pi=document.createElement('div');
         pi.className='para-item'+(SEL.pid===para.id?' on':'');
-        pi.innerHTML=`<span class="para-name-el">${escH(para.name)}</span><button class="para-xbtn" data-gid="${grp.id}" data-pid="${para.id}">✕</button>`;
+        pi.draggable=true;
+        pi.innerHTML=`<span class="para-name-el">${escH(para.name)}</span>
+          <button class="para-ctx-btn" title="단락 메뉴" style="opacity:0;font-size:11px;color:#aaa;border:none;background:transparent;cursor:pointer;padding:0 3px;font-family:inherit;">⋮</button>
+          <button class="para-xbtn">✕</button>`;
         pi.addEventListener('click',e=>{
-          if(e.target.classList.contains('para-xbtn')) return;
+          if(e.target.classList.contains('para-xbtn')||e.target.classList.contains('para-ctx-btn')) return;
           SEL.gid=grp.id;SEL.pid=para.id;renderTree();renderEditor();
         });
+        pi.addEventListener('mouseenter',()=>{pi.querySelector('.para-ctx-btn').style.opacity='1';});
+        pi.addEventListener('mouseleave',()=>{pi.querySelector('.para-ctx-btn').style.opacity='0';});
         pi.querySelector('.para-xbtn').addEventListener('click',e=>{
           e.stopPropagation();
           grp.paras=grp.paras.filter(p=>p.id!==para.id);
           if(SEL.pid===para.id) SEL.pid=null;
           renderTree();renderEditor();scheduleSave();
         });
+        // 단락 컨텍스트 버튼
+        pi.querySelector('.para-ctx-btn').addEventListener('click',e=>{
+          e.stopPropagation();
+          showParaCtx(e.clientX,e.clientY,grp,para);
+        });
+        // 단락 드래그 — 그룹 간 이동
+        pi.addEventListener('dragstart',e=>{
+          PARA_DRAG={para,fromGid:grp.id};
+          pi.classList.add('pdragging');
+          e.dataTransfer.effectAllowed='move';
+        });
+        pi.addEventListener('dragend',()=>{
+          pi.classList.remove('pdragging');
+          document.querySelectorAll('.pdrag-over').forEach(x=>x.classList.remove('pdrag-over'));
+          PARA_DRAG=null;
+        });
+        pi.addEventListener('dragover',e=>{
+          if(!PARA_DRAG) return;
+          e.preventDefault();
+          document.querySelectorAll('.pdrag-over').forEach(x=>x.classList.remove('pdrag-over'));
+          pi.classList.add('pdrag-over');
+        });
+        pi.addEventListener('drop',e=>{
+          e.preventDefault();
+          pi.classList.remove('pdrag-over');
+          if(!PARA_DRAG) return;
+          const {para:dp,fromGid}=PARA_DRAG;
+          if(dp.id===para.id) return;
+          // 같은 그룹: 순서 변경
+          if(fromGid===grp.id){
+            const arr=grp.paras;
+            const fi=arr.findIndex(p=>p.id===dp.id);
+            const ti=arr.findIndex(p=>p.id===para.id);
+            const [mv]=arr.splice(fi,1);arr.splice(ti,0,mv);
+          } else {
+            // 다른 그룹: 이동
+            const srcGrp=DATA.groups.find(g=>g.id===fromGid);
+            if(srcGrp) srcGrp.paras=srcGrp.paras.filter(p=>p.id!==dp.id);
+            const ti=grp.paras.findIndex(p=>p.id===para.id);
+            grp.paras.splice(ti,0,dp);
+          }
+          SEL.gid=grp.id;SEL.pid=dp.id;
+          renderTree();renderEditor();scheduleSave();
+        });
         plist.appendChild(pi);
       });
-      const addRow=document.createElement('div');addRow.className='add-para-row';
+      const addRow2=document.createElement('div');addRow2.className='add-para-row';
       const addBtn=document.createElement('button');addBtn.className='add-para-btn';addBtn.textContent='+ 단락 추가';
       addBtn.addEventListener('click',()=>{
         const p={id:uid(),name:'단락 '+(grp.paras.length+1),rows:[]};
         grp.paras.push(p);SEL.gid=grp.id;SEL.pid=p.id;
         renderTree();renderEditor();scheduleSave();
       });
-      addRow.appendChild(addBtn);plist.appendChild(addRow);
+      // 그룹 자체에 드롭 (빈 그룹 or 맨 아래)
+      plist.addEventListener('dragover',e=>e.preventDefault());
+      plist.addEventListener('drop',e=>{
+        e.preventDefault();
+        if(!PARA_DRAG) return;
+        const {para:dp,fromGid}=PARA_DRAG;
+        if(fromGid===grp.id) return;
+        const srcGrp=DATA.groups.find(g=>g.id===fromGid);
+        if(srcGrp) srcGrp.paras=srcGrp.paras.filter(p=>p.id!==dp.id);
+        grp.paras.push(dp);
+        SEL.gid=grp.id;SEL.pid=dp.id;
+        renderTree();renderEditor();scheduleSave();
+      });
+      addRow2.appendChild(addBtn);plist.appendChild(addRow2);
       wrap.appendChild(plist);
     }
     tree.appendChild(wrap);
   });
+}
+
+// 단락 컨텍스트 메뉴
+function showParaCtx(x,y,grp,para){
+  const menu=$('ctx-menu');
+  menu.innerHTML='';
+  const otherGrps=DATA.groups.filter(g=>g.id!==grp.id);
+  const items=[
+    {l:'단락 복제', a:()=>{
+      const clone=JSON.parse(JSON.stringify(para));
+      clone.id=uid();clone.name=para.name+' (복사)';
+      clone.rows.forEach(r=>r.id=uid());
+      const idx=grp.paras.findIndex(p=>p.id===para.id);
+      grp.paras.splice(idx+1,0,clone);
+      SEL.gid=grp.id;SEL.pid=clone.id;
+      renderTree();renderEditor();scheduleSave();
+    }},
+    {sep:true},
+    ...otherGrps.map(tg=>({
+      l:`→ "${tg.name}"으로 이동`,
+      a:()=>{
+        grp.paras=grp.paras.filter(p=>p.id!==para.id);
+        tg.paras.push(para);
+        if(SEL.pid===para.id){SEL.gid=tg.id;}
+        renderTree();renderEditor();scheduleSave();
+      }
+    })),
+    ...(otherGrps.length?[{sep:true}]:[]),
+    {l:'이 단락 삭제', red:true, a:()=>{
+      grp.paras=grp.paras.filter(p=>p.id!==para.id);
+      if(SEL.pid===para.id) SEL.pid=null;
+      renderTree();renderEditor();scheduleSave();
+    }},
+  ];
+  items.forEach(item=>{
+    if(item.sep){const s=document.createElement('hr');s.className='ctx-sep';menu.appendChild(s);return;}
+    const b=document.createElement('button');
+    b.className='ctx-btn'+(item.red?' red':'');
+    b.textContent=item.l;
+    b.addEventListener('click',()=>{hideCtx();item.a();});
+    menu.appendChild(b);
+  });
+  menu.classList.remove('hidden');
+  const mw=menu.offsetWidth||160,mh=menu.offsetHeight||200;
+  menu.style.left=Math.min(x,innerWidth-mw-8)+'px';
+  menu.style.top=Math.min(y,innerHeight-mh-8)+'px';
 }
 
 $('sc-add-grp').addEventListener('click',()=>{
@@ -1259,6 +1489,34 @@ $('sc-add-grp').addEventListener('click',()=>{
   g.paras.push(p);DATA.groups.push(g);
   SEL.gid=g.id;SEL.pid=p.id;
   renderTree();renderEditor();scheduleSave();
+});
+
+// 단락 검색
+$('sc-search').addEventListener('input',()=>renderTree());
+
+// 단락 이름 일괄 편집
+$('sc-bulk-rename').addEventListener('click',()=>{
+  const modal=$('bulk-rename-modal');
+  // 현재 모든 단락 이름 수집
+  const names=[];
+  DATA.groups.forEach(g=>g.paras.forEach(p=>names.push(p.name)));
+  $('bulk-rename-ta').value=names.join('\n');
+  modal.classList.remove('hidden');
+  $('bulk-rename-ta').focus();
+});
+$('bulk-rename-cancel').addEventListener('click',()=>$('bulk-rename-modal').classList.add('hidden'));
+$('bulk-rename-ok').addEventListener('click',()=>{
+  const lines=$('bulk-rename-ta').value.split('\n').map(l=>l.trim());
+  let idx=0;
+  DATA.groups.forEach(g=>g.paras.forEach(p=>{
+    if(idx<lines.length&&lines[idx]!=='') p.name=lines[idx];
+    idx++;
+  }));
+  $('bulk-rename-modal').classList.add('hidden');
+  renderTree();renderEditor();scheduleSave();
+});
+$('bulk-rename-modal').addEventListener('click',e=>{
+  if(e.target===$('bulk-rename-modal'))$('bulk-rename-modal').classList.add('hidden');
 });
 
 // ─────────────────────────────────────────────
@@ -1325,10 +1583,13 @@ function renderEditor(){
         <input class="custom-cmd hidden" id="custom-cmd-inp" placeholder="/명령어">
       </div>
       <div class="out-box" style="margin-bottom:6px;"><div class="out-code" id="sc-out-all"></div></div>
-      <div class="btn-row" style="margin-bottom:10px;">
+      <div class="btn-row" style="margin-bottom:6px;">
         <button class="btn pri" id="sc-copy-all">전체 복사</button>
         <button class="btn" id="sc-copy-para">단락 전체 복사</button>
         <button class="btn" id="sc-sel-all">전체 선택</button>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:#888;cursor:pointer;margin-left:2px;">
+          <input type="checkbox" id="opt-strip-empty" style="cursor:pointer;"> 빈 줄 제거
+        </label>
       </div>
       <div class="ptitle">줄 단위 복사</div>
       <div class="line-copy-list" id="line-copy-list"></div>
@@ -1378,8 +1639,9 @@ function renderEditor(){
   $('sc-copy-para').addEventListener('click',()=>{
     const para=getSelPara(); if(!para) return;
     const cmd=getCmd();
-    const lines=buildLines(para,cmd);
-    const text=lines.map(l=>l.text).join('\n');
+    const stripEmpty2=!!($('opt-strip-empty')&&$('opt-strip-empty').checked);
+    const lines=buildLines(para,cmd,stripEmpty2);
+    const text=lines.filter(l=>l.text||!stripEmpty2).map(l=>l.text).join('\n');
     navigator.clipboard.writeText(text).then(()=>{
       $('sc-copy-para').textContent='복사됨!';
       setTimeout(()=>{$('sc-copy-para').textContent='단락 전체 복사';},1600);
@@ -1406,22 +1668,54 @@ function addRow(type,afterId=null,text=''){
 // 드래그 상태
 let dragSrc=null;
 
+let SELECTED_ROWS=new Set(); // 선택된 행 id
+
 function renderRowList(){
   const para=getSelPara();if(!para)return;
   const list=$('row-list');if(!list)return;
   if(!para.rows.length){list.innerHTML='<div style="padding:14px;text-align:center;font-size:12px;color:#aaa;">위 버튼으로 행을 추가하세요.</div>';return;}
-  list.innerHTML='';
+  // 선택 툴바
+  const hasSelected=SELECTED_ROWS.size>0;
+  list.innerHTML=hasSelected?`<div style="display:flex;align-items:center;gap:8px;padding:5px 7px;background:var(--surface2);border-bottom:1px solid var(--border2);font-size:11px;color:var(--text2);">
+    <span><b>${SELECTED_ROWS.size}</b>개 선택됨</span>
+    <button class="btn" id="sel-type-change" style="padding:3px 10px;">타입 변경</button>
+    <button class="btn" id="sel-deselect" style="padding:3px 10px;">선택 해제</button>
+  </div>`:'';
+  if(hasSelected){
+    list.querySelector('#sel-type-change').addEventListener('click',()=>openBulkTypeModal());
+    list.querySelector('#sel-deselect').addEventListener('click',()=>{SELECTED_ROWS.clear();renderRowList();});
+  }
   para.rows.forEach(row=>{
     const el=document.createElement('div');
-    el.className='ri';
+    const isSel=SELECTED_ROWS.has(row.id);
+    el.className='ri'+(isSel?' selected':'');
     el.id='ri-'+row.id;
     el.draggable=true;
     el.dataset.rid=row.id;
+    // 명령어 오버라이드 버튼 (범용 행만)
+    const isCommon=(row.type==='common');
+    const hasOverride=isCommon&&row.cmd;
+    const cmdLabel=hasOverride?row.cmd:'cmd';
     el.innerHTML=`
-      <div class="ri-badge ${row.type==='div'?'div':row.type}">${TYPE_LBL[row.type]||row.type}</div>
+      <div class="ri-badge ${row.type==='div'?'div':row.type}" style="cursor:pointer;" title="클릭해서 선택">${TYPE_LBL[row.type]||row.type}</div>
       <div class="ri-body"><textarea class="ri-ta${row.type==='memo'?' memo':row.type==='div'?' div':''}" rows="1" placeholder="${TYPE_PH[row.type]||''}">${escH(row.text)}</textarea></div>
+      ${isCommon?`<button class="ri-cmd${hasOverride?' override':''}" title="${hasOverride?'명령어 오버라이드: '+row.cmd:'기본 명령어 사용 중 (클릭하여 개별 지정)'}">${cmdLabel}</button>`:''}
       <div class="ri-drag" title="드래그로 순서 변경">⠿</div>
       <button class="ri-ctx" data-rid="${row.id}">⋮</button>`;
+    // 뱃지 클릭 → 행 선택/해제
+    el.querySelector('.ri-badge').addEventListener('click',e=>{
+      e.stopPropagation();
+      if(SELECTED_ROWS.has(row.id)) SELECTED_ROWS.delete(row.id);
+      else SELECTED_ROWS.add(row.id);
+      renderRowList();
+    });
+    // 명령어 오버라이드 버튼 클릭
+    if(isCommon){
+      el.querySelector('.ri-cmd').addEventListener('click',e=>{
+        e.stopPropagation();
+        showCmdPopup(e.currentTarget, row);
+      });
+    }
 
     const ta=el.querySelector('.ri-ta');
     ta.style.height='auto';
@@ -1462,6 +1756,59 @@ function renderRowList(){
 }
 
 // ─────────────────────────────────────────────
+//  행 명령어 오버라이드 팝업
+// ─────────────────────────────────────────────
+let _cmdPopup=null;
+function showCmdPopup(btn, row){
+  // 기존 팝업 제거
+  if(_cmdPopup){_cmdPopup.remove();_cmdPopup=null;}
+  const popup=document.createElement('div');
+  popup.className='cmd-popup';
+  _cmdPopup=popup;
+
+  const cmds=['/desc','/em','/w gm','/w all','/ooc'];
+  cmds.forEach(cmd=>{
+    const b=document.createElement('button');
+    b.className='cmd-popup-item'+(row.cmd===cmd?' on':'');
+    b.textContent=cmd;
+    b.addEventListener('click',e=>{
+      e.stopPropagation();
+      row.cmd=cmd;
+      popup.remove();_cmdPopup=null;
+      renderRowList();renderResult();scheduleSave();
+    });
+    popup.appendChild(b);
+  });
+  // 기본값으로 초기화
+  const reset=document.createElement('button');
+  reset.className='cmd-popup-reset';
+  reset.textContent='↺ 기본값으로 초기화';
+  reset.addEventListener('click',e=>{
+    e.stopPropagation();
+    delete row.cmd;
+    popup.remove();_cmdPopup=null;
+    renderRowList();renderResult();scheduleSave();
+  });
+  popup.appendChild(reset);
+
+  document.body.appendChild(popup);
+  // 위치 계산
+  const rect=btn.getBoundingClientRect();
+  const pw=popup.offsetWidth||120, ph=popup.offsetHeight||160;
+  let lx=rect.left, ly=rect.bottom+3;
+  if(lx+pw>innerWidth-8) lx=innerWidth-pw-8;
+  if(ly+ph>innerHeight-8) ly=rect.top-ph-3;
+  popup.style.left=lx+'px';
+  popup.style.top=ly+'px';
+
+  // 외부 클릭 시 닫기
+  setTimeout(()=>{
+    const close=e=>{if(!popup.contains(e.target)){popup.remove();_cmdPopup=null;document.removeEventListener('click',close);}};
+    document.addEventListener('click',close);
+  },0);
+}
+
+// ─────────────────────────────────────────────
 //  컨텍스트 메뉴
 // ─────────────────────────────────────────────
 function showCtx(x,y,row){
@@ -1482,6 +1829,10 @@ function showCtx(x,y,row){
       const i=para.rows.findIndex(r=>r.id===row.id);
       para.rows.splice(i+1,0,nr);renderRowList();renderResult();scheduleSave();
     }, disabled:!CLIPBOARD},
+    {sep:true},
+    {l:'타입 변경 →', sub:true, a:()=>{
+      SELECTED_ROWS.clear();SELECTED_ROWS.add(row.id);openBulkTypeModal();
+    }},
     {sep:true},
     {l:'이 행 삭제', a:()=>{const para=getSelPara();if(!para)return;pushUndo('행 삭제');para.rows=para.rows.filter(r=>r.id!==row.id);renderRowList();renderResult();scheduleSave();showUndoToast('행이 삭제됐습니다.',true);}, red:true},
   ];
@@ -1513,25 +1864,28 @@ function getCmd(){
   return c.dataset.v;
 }
 
-function buildLines(para,cmd){
+function buildLines(para,cmd,stripEmpty=false){
   const lines=[];
   para.rows.forEach(row=>{
     if(row.type==='memo') return;
     (row.text||'').split('\n').forEach(l=>{
-      if(l.trim()===''){lines.push({text:'',type:'empty'});return;}
+      if(l.trim()===''){
+        if(!stripEmpty) lines.push({text:'',type:'empty'});
+        return;
+      }
       if(row.type==='tag'||row.type==='div'){
-        // 태그/구분선: Roll20 코드 그대로 — 이름 치환 안 함
         lines.push({text:l,type:'tag'});
       } else {
-        // 범용 행: KPC/PC/탐사자 → 실제 이름 치환 + 조사 처리
         const applied=applyNames(l);
+        // 행 개별 명령어가 설정된 경우 오버라이드, 없으면 전체 기본값 사용
+        const rowCmd=row.cmd||cmd;
         const alreadyCmd=/^\/[a-z]/.test(applied.trim());
         if(alreadyCmd){
           const detectedCmd=applied.trim().match(/^(\/(?:w\s+\S+|\S+))/);
-          const dc=detectedCmd?detectedCmd[1]:cmd;
+          const dc=detectedCmd?detectedCmd[1]:rowCmd;
           lines.push({text:applied.trim(),type:dc});
         } else {
-          lines.push({text:cmd+' '+applied,type:cmd});
+          lines.push({text:rowCmd+' '+applied,type:rowCmd});
         }
       }
     });
@@ -1545,7 +1899,8 @@ function renderResult(){
   const para=getSelPara();
   if(!para){outAll.textContent='';if(lineCopy)lineCopy.innerHTML='';if(vp)vp.innerHTML='<div class="chat-empty-msg">행을 추가하면 표시됩니다.</div>';return;}
   const cmd=getCmd();
-  const lines=buildLines(para,cmd);
+  const stripEmpty=!!($('opt-strip-empty')&&$('opt-strip-empty').checked);
+  const lines=buildLines(para,cmd,stripEmpty);
 
   // 전체 코드
   outAll.textContent=lines.map(l=>l.text).join('\n');
@@ -2059,6 +2414,52 @@ $('div-fav-save').addEventListener('click',()=>{
     len:parseInt($('d-len').value)||12
   });
   renderDivFavs(); scheduleSave();
+});
+
+// ─────────────────────────────────────────────
+//  다크 모드
+// ─────────────────────────────────────────────
+function applyDark(on){
+  document.body.classList.toggle('dark',on);
+  $('btn-dark-mode').textContent=on?'☀':'🌙';
+  try{localStorage.setItem('r20gen_dark',on?'1':'0');}catch(e){}
+}
+$('btn-dark-mode').addEventListener('click',()=>{
+  applyDark(!document.body.classList.contains('dark'));
+});
+// 저장된 다크모드 상태 복원
+(()=>{try{if(localStorage.getItem('r20gen_dark')==='1')applyDark(true);}catch(e){}})();
+
+// ─────────────────────────────────────────────
+//  단축키 안내 모달
+// ─────────────────────────────────────────────
+$('btn-shortcuts').addEventListener('click',()=>$('shortcuts-modal').classList.remove('hidden'));
+$('shortcuts-close').addEventListener('click',()=>$('shortcuts-modal').classList.add('hidden'));
+$('shortcuts-modal').addEventListener('click',e=>{if(e.target===$('shortcuts-modal'))$('shortcuts-modal').classList.add('hidden');});
+
+// ─────────────────────────────────────────────
+//  행 타입 일괄 변경
+// ─────────────────────────────────────────────
+function openBulkTypeModal(){
+  if(!SELECTED_ROWS.size) return;
+  $('bulk-type-count').textContent=SELECTED_ROWS.size;
+  $('bulk-type-modal').classList.remove('hidden');
+}
+$('bulk-type-cancel').addEventListener('click',()=>{
+  $('bulk-type-modal').classList.add('hidden');
+});
+$('bulk-type-modal').addEventListener('click',e=>{
+  if(e.target===$('bulk-type-modal'))$('bulk-type-modal').classList.add('hidden');
+});
+['tag','common','div','memo'].forEach(type=>{
+  $('btype-'+type).addEventListener('click',()=>{
+    const para=getSelPara();if(!para)return;
+    pushUndo('타입 일괄 변경');
+    para.rows.forEach(r=>{if(SELECTED_ROWS.has(r.id))r.type=type;});
+    SELECTED_ROWS.clear();
+    $('bulk-type-modal').classList.add('hidden');
+    renderRowList();renderResult();scheduleSave();
+  });
 });
 
 // ─────────────────────────────────────────────
